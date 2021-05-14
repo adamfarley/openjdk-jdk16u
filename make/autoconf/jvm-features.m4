@@ -287,12 +287,18 @@ AC_DEFUN_ONCE([JVM_FEATURES_CHECK_DTRACE],
       AVAILABLE=false
     fi
 
-    AC_CHECK_FILE([/usr/include/x86_64-linux-gnu/sys/sdt.h],[AC_MSG_NOTICE([Found inky.h])],[AC_MSG_NOTICE([Didn't find inky.h])])
-
     AC_CHECK_HEADERS([sys/sdt.h], [dtrace_headers_ok=true])
     if test "x$dtrace_headers_ok" != "xtrue"; then
       HELP_MSG_MISSING_DEPENDENCY([dtrace])
       AC_MSG_NOTICE([Cannot enable dtrace with missing dependencies. See above.])
+      AC_MSG_NOTICE([Trying again with AC_LANG set to C.])
+      AC_LANG_PUSH([C])
+      AC_CHECK_HEADERS([sys/sdt.h],[AC_MSG_NOTICE([Found sdt.h])],[AC_MSG_NOTICE([Didn't find sdt.h])])
+      AC_LANG_POP([C])
+      AC_MSG_NOTICE([Trying again with AC_LANG set to C++.])
+      AC_LANG_PUSH([C++])
+      AC_CHECK_HEADERS([sys/sdt.h],[AC_MSG_NOTICE([Found sdt.h])],[AC_MSG_NOTICE([Didn't find sdt.h])])
+      AC_LANG_POP([C++])
       AVAILABLE=false
     fi
   ])
